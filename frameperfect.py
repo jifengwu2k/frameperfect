@@ -31,10 +31,10 @@ if qt_binding == QtBindings.PyQt6:
     SLIDER_MOVE = QAbstractSlider.SliderAction.SliderMove.value
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
+    def execute(q_application):
+        # type: (QApplication) -> int
         # To make the syntax Python 2-compatible
-        sys.exit(getattr(q_application, 'exec')())
+        return getattr(q_application, 'exec')()
 
 elif qt_binding == QtBindings.PySide6:
     from PySide6.QtCore import Qt, QTimer
@@ -60,10 +60,10 @@ elif qt_binding == QtBindings.PySide6:
     SLIDER_MOVE = QAbstractSlider.SliderAction.SliderMove.value
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
+    def execute(q_application):
+        # type: (QApplication) -> int
         # To make the syntax Python 2-compatible
-        sys.exit(getattr(q_application, 'exec')())
+        return getattr(q_application, 'exec')()
 
 elif qt_binding == QtBindings.PyQt5:
     from PyQt5.QtCore import Qt, QTimer
@@ -89,9 +89,9 @@ elif qt_binding == QtBindings.PyQt5:
     SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
-        sys.exit(q_application.exec_())
+    def execute(q_application):
+        # type: (QApplication) -> int
+        return q_application.exec_()
 
 elif qt_binding == QtBindings.PySide2:
     from PySide2.QtCore import Qt, QTimer
@@ -117,9 +117,9 @@ elif qt_binding == QtBindings.PySide2:
     SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
-        sys.exit(q_application.exec_())
+    def execute(q_application):
+        # type: (QApplication) -> int
+        return q_application.exec_()
 
 elif qt_binding == QtBindings.PyQt4:
     from PyQt4.QtCore import Qt, QTimer
@@ -147,9 +147,9 @@ elif qt_binding == QtBindings.PyQt4:
     SLIDER_MOVE = QAbstractSlider.SliderMove
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
-        sys.exit(q_application.exec_())
+    def execute(q_application):
+        # type: (QApplication) -> int
+        return q_application.exec_()
 
 elif qt_binding == QtBindings.PySide:
     from PySide.QtCore import Qt, QTimer
@@ -177,9 +177,9 @@ elif qt_binding == QtBindings.PySide:
     SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
 
 
-    def exec_and_exit(q_application):
-        # type: (QApplication) -> None
-        sys.exit(q_application.exec_())
+    def execute(q_application):
+        # type: (QApplication) -> int
+        return q_application.exec_()
 
 else:
     raise ImportError(
@@ -358,7 +358,7 @@ class VideoPlayer(QMainWindow):
 
         if not video_capture.isOpened():
             QMessageBox.critical(self, 'Error', 'Could not open video file %s' % video_path)
-            return
+            return False
 
         total_frames = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT))
         curr_frame_idx = 0
@@ -367,7 +367,7 @@ class VideoPlayer(QMainWindow):
         ret, curr_hwc_bgr_frame_or_none = video_capture.read()
         if not ret or curr_hwc_bgr_frame_or_none is None:
             QMessageBox.critical(self, 'Error', 'Could not open video file %s' % video_path)
-            return
+            return False
 
         video_playback_information = VideoPlaybackInformation(
             video_path=video_path,
@@ -380,6 +380,8 @@ class VideoPlayer(QMainWindow):
 
         # Transition to `VideoOpenedAndPaused` state
         self.handle_state_transition(VideoOpenedAndPaused(video_playback_information))
+
+        return True
 
     def prev_frame(self):
         if isinstance(self.state, VideoOpenedAndPaused):
@@ -567,7 +569,31 @@ class VideoPlayer(QMainWindow):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    current_script_path, *video_paths = sys.argv
+    app = QApplication([])
     player = VideoPlayer()
-    player.show()
-    exec_and_exit(app)
+
+    # Interactive Mode
+    if not video_paths:
+        player.show()
+        sys.exit(execute(app))
+    # Sequential Batch Mode
+    else:
+        success_count = 0
+        for video_path in video_paths:
+            if player.load_video(video_path):
+                player.show()
+                QApplication.processEvents()
+                execute(app)
+                success_count += 1
+                player.hide()
+            else:
+                sys.stderr.write('Could not open video file %s\n' % video_path)
+        sys.stdout.write('Processed %d/%d videos\n' % (success_count, len(video_paths)))
+        player.close()
+        app.quit()
+
+        if success_count == len(video_paths):
+            sys.exit(0)
+        else:
+            sys.exit(1)

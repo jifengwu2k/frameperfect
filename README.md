@@ -9,6 +9,7 @@ A lightweight GUI application for precise frame-by-frame video analysis and scre
   - Guaranteed frame accuracy (no skipped frames)
   - Dedicated screenshot workflow
   - Clean interface without unnecessary features
+- **Multi-file sequential processing**: Provide multiple video files and automatically advance to the next when closing (New!)
 
 ## Key Features
 
@@ -26,9 +27,28 @@ pip install frameperfect
 
 ## Usage
 
+### Option 1: Interactive Mode
+
 ```bash
 python -m frameperfect
 ```
+
+1. Click "Open Video" and select your video file
+2. Use navigation controls:
+   - **Previous/Next Frame**: Move precisely through frames
+   - **Slider**: Jump to any position
+   - **Save Frame**: Capture current frame
+
+### Option 2: Sequential Batch Mode (New!)
+
+```bash
+python -m frameperfect video1.mp4 video2.mp4 video3.mp4
+```
+- 
+- Automatically opens `video1.mp4` first
+- When window closes, immediately opens `video2.mp4`
+- Process repeats until all videos are processed
+- Perfect for reviewing multiple clips in one session
 
 ### Basic Workflow
 
