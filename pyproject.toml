@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "frameperfect"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "A lightweight GUI application for precise frame-by-frame video analysis and screenshot extraction, built with PySide/PyQt and OpenCV."
 readme = "README.md"
 requires-python = ">=2"

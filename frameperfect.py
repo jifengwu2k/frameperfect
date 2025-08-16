@@ -447,6 +447,7 @@ class VideoPlayer(QMainWindow):
             total_frames = video_playback_information.total_frames
             curr_frame_idx = video_playback_information.curr_frame_idx
             curr_hwc_bgr_frame = video_playback_information.curr_hwc_bgr_frame
+            fps = video_playback_information.fps
 
             # Convert BGR to RGB
             curr_hwc_rgb_frame = cv2.cvtColor(curr_hwc_bgr_frame, cv2.COLOR_BGR2RGB)
@@ -467,7 +468,7 @@ class VideoPlayer(QMainWindow):
 
             self.slider.setValue(curr_frame_idx)
             self.video_label.setPixmap(pixmap)
-            self.status_label.setText('Frame: %d/%d' % (curr_frame_idx + 1, total_frames))
+            self.status_label.setText('Frame: %d/%d; Time: %.3fs/%.3fs' % (curr_frame_idx, total_frames - 1, curr_frame_idx / fps, total_frames / fps))
 
     def open_video_callback(self):
         file_dialog = QFileDialog()
