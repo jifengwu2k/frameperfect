@@ -569,7 +569,7 @@ class VideoPlayer(QMainWindow):
         event.accept()
 
 
-if __name__ == '__main__':
+def main():
     current_script_path, *video_paths = sys.argv
     app = QApplication([])
     player = VideoPlayer()
@@ -577,7 +577,7 @@ if __name__ == '__main__':
     # Interactive Mode
     if not video_paths:
         player.show()
-        sys.exit(execute(app))
+        return execute(app)
     # Sequential Batch Mode
     else:
         success_count = 0
@@ -595,6 +595,10 @@ if __name__ == '__main__':
         app.quit()
 
         if success_count == len(video_paths):
-            sys.exit(0)
+            return 0
         else:
-            sys.exit(1)
+            return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -24,13 +24,14 @@ A lightweight GUI application for precise frame-by-frame video analysis and scre
 ```bash
 pip install frameperfect
 ```
+After installation, run it as `frameperfect`.
 
 ## Usage
 
 ### Option 1: Interactive Mode
 
 ```bash
-python -m frameperfect
+frameperfect
 ```
 
 1. Click "Open Video" and select your video file
@@ -42,7 +43,7 @@ python -m frameperfect
 ### Option 2: Sequential Batch Mode (New!)
 
 ```bash
-python -m frameperfect video1.mp4 video2.mp4 video3.mp4
+frameperfect video1.mp4 video2.mp4 video3.mp4
 ```
 - 
 - Automatically opens `video1.mp4` first
