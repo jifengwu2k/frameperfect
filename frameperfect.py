@@ -3,187 +3,36 @@ import sys
 
 import attr
 import cv2
-from detect_qt_binding import QtBindings, detect_qt_binding
 from numpy import ndarray
+from pyqtcompat import (
+    Format_RGB888,
+    QApplication,
+    QFileDialog,
+    QHBoxLayout,
+    QImage,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QPixmap,
+    QPushButton,
+    QSlider,
+    QTimer,
+    QVBoxLayout,
+    QWidget,
+    QT_ALIGN_CENTER,
+    QT_HORIZONTAL,
+    QT_KEEP_ASPECT_RATIO,
+    QT_SMOOTH_TRANSFORMATION,
+    SLIDER_MOVE,
+    SLIDER_PAGE_STEP_ADD,
+    SLIDER_PAGE_STEP_SUB,
+    SLIDER_SINGLE_STEP_ADD,
+    SLIDER_SINGLE_STEP_SUB,
+    execute,
+)
 
-qt_binding = detect_qt_binding()
-if qt_binding == QtBindings.PyQt6:
-    from PyQt6.QtCore import Qt, QTimer
-    from PyQt6.QtGui import QImage, QPixmap
-    from PyQt6.QtWidgets import (
-        QAbstractSlider,
-        QApplication,
-        QFileDialog,
-        QHBoxLayout,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = QAbstractSlider.SliderAction.SliderSingleStepAdd.value
-    SLIDER_SINGLE_STEP_SUB = QAbstractSlider.SliderAction.SliderSingleStepSub.value
-    SLIDER_PAGE_STEP_ADD = QAbstractSlider.SliderAction.SliderPageStepAdd.value
-    SLIDER_PAGE_STEP_SUB = QAbstractSlider.SliderAction.SliderPageStepSub.value
-    SLIDER_MOVE = QAbstractSlider.SliderAction.SliderMove.value
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        # To make the syntax Python 2-compatible
-        return getattr(q_application, 'exec')()
-
-elif qt_binding == QtBindings.PySide6:
-    from PySide6.QtCore import Qt, QTimer
-    from PySide6.QtGui import QImage, QPixmap
-    from PySide6.QtWidgets import (
-        QAbstractSlider,
-        QApplication,
-        QFileDialog,
-        QHBoxLayout,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = QAbstractSlider.SliderAction.SliderSingleStepAdd.value
-    SLIDER_SINGLE_STEP_SUB = QAbstractSlider.SliderAction.SliderSingleStepSub.value
-    SLIDER_PAGE_STEP_ADD = QAbstractSlider.SliderAction.SliderPageStepAdd.value
-    SLIDER_PAGE_STEP_SUB = QAbstractSlider.SliderAction.SliderPageStepSub.value
-    SLIDER_MOVE = QAbstractSlider.SliderAction.SliderMove.value
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        # To make the syntax Python 2-compatible
-        return getattr(q_application, 'exec')()
-
-elif qt_binding == QtBindings.PyQt5:
-    from PyQt5.QtCore import Qt, QTimer
-    from PyQt5.QtGui import QImage, QPixmap
-    from PyQt5.QtWidgets import (
-        QAbstractSlider,
-        QApplication,
-        QFileDialog,
-        QHBoxLayout,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderSingleStepAdd)
-    SLIDER_SINGLE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderSingleStepSub)
-    SLIDER_PAGE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderPageStepAdd)
-    SLIDER_PAGE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderPageStepSub)
-    SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        return q_application.exec_()
-
-elif qt_binding == QtBindings.PySide2:
-    from PySide2.QtCore import Qt, QTimer
-    from PySide2.QtGui import QImage, QPixmap
-    from PySide2.QtWidgets import (
-        QAbstractSlider,
-        QApplication,
-        QFileDialog,
-        QHBoxLayout,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderSingleStepAdd)
-    SLIDER_SINGLE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderSingleStepSub)
-    SLIDER_PAGE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderPageStepAdd)
-    SLIDER_PAGE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderPageStepSub)
-    SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        return q_application.exec_()
-
-elif qt_binding == QtBindings.PyQt4:
-    from PyQt4.QtCore import Qt, QTimer
-    from PyQt4.QtGui import (
-        QAbstractSlider,
-        QApplication,
-        QDesktopServices,
-        QFileDialog,
-        QHBoxLayout,
-        QImage,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPixmap,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = QAbstractSlider.SliderSingleStepAdd
-    SLIDER_SINGLE_STEP_SUB = QAbstractSlider.SliderSingleStepSub
-    SLIDER_PAGE_STEP_ADD = QAbstractSlider.SliderPageStepAdd
-    SLIDER_PAGE_STEP_SUB = QAbstractSlider.SliderPageStepSub
-    SLIDER_MOVE = QAbstractSlider.SliderMove
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        return q_application.exec_()
-
-elif qt_binding == QtBindings.PySide:
-    from PySide.QtCore import Qt, QTimer
-    from PySide.QtGui import (
-        QAbstractSlider,
-        QApplication,
-        QDesktopServices,
-        QFileDialog,
-        QHBoxLayout,
-        QImage,
-        QLabel,
-        QMainWindow,
-        QMessageBox,
-        QPixmap,
-        QPushButton,
-        QSlider,
-        QVBoxLayout,
-        QWidget
-    )
-
-    SLIDER_SINGLE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderSingleStepAdd)
-    SLIDER_SINGLE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderSingleStepSub)
-    SLIDER_PAGE_STEP_ADD = int(QAbstractSlider.SliderAction.SliderPageStepAdd)
-    SLIDER_PAGE_STEP_SUB = int(QAbstractSlider.SliderAction.SliderPageStepSub)
-    SLIDER_MOVE = int(QAbstractSlider.SliderAction.SliderMove)
-
-
-    def execute(q_application):
-        # type: (QApplication) -> int
-        return q_application.exec_()
-
-else:
-    raise ImportError(
-        'We require one of PyQt6, PySide6, PyQt5, PySide2, PyQt4, or PySide. None of these packages were detected in your Python environment.')
+PLAYBACK_SPEEDS = (0.5, 1.0, 2.0, 4.0)
+DEFAULT_PLAYBACK_SPEED_INDEX = 1
 
 
 @attr.s
@@ -222,6 +71,9 @@ class VideoPlayer(QMainWindow):
         self.setWindowTitle('FramePerfect Video Analyzer')
         self.setGeometry(128, 128, 1280, 720)
 
+        # Playback speed
+        self.playback_speed = PLAYBACK_SPEEDS[DEFAULT_PLAYBACK_SPEED_INDEX]
+
         # Central widget and main layout
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -229,7 +81,7 @@ class VideoPlayer(QMainWindow):
 
         # Video display label
         self.video_label = QLabel()
-        self.video_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.video_label.setAlignment(QT_ALIGN_CENTER)
         self.video_label.setStyleSheet('background-color: black; color: white')
         main_layout.addWidget(self.video_label, 1)
 
@@ -261,10 +113,26 @@ class VideoPlayer(QMainWindow):
         self.save_button.clicked.connect(self.save_callback)
         controls_layout.addWidget(self.save_button)
 
+        # Playback speed controls
+        controls_layout.addWidget(QLabel('Playback Speed:'))
+        self.speed_slider = QSlider(QT_HORIZONTAL)
+        self.speed_slider.setRange(0, len(PLAYBACK_SPEEDS) - 1)
+        self.speed_slider.setSingleStep(1)
+        self.speed_slider.setPageStep(1)
+        self.speed_slider.setValue(DEFAULT_PLAYBACK_SPEED_INDEX)
+        self.speed_slider.setFixedWidth(120)
+        self.speed_slider.setToolTip('Playback speed: 0.5x, 1x, 2x, 4x')
+        self.speed_slider.valueChanged.connect(self.playback_speed_changed_callback)
+        controls_layout.addWidget(self.speed_slider)
+
+        self.speed_label = QLabel('%gx' % self.playback_speed)
+        self.speed_label.setFixedWidth(40)
+        controls_layout.addWidget(self.speed_label)
+
         main_layout.addLayout(controls_layout)
 
         # Progress slider
-        self.slider = QSlider(Qt.Orientation.Horizontal)
+        self.slider = QSlider(QT_HORIZONTAL)
         # Enable slider tracking
         self.slider.setEnabled(True)
         self.slider.actionTriggered.connect(self.slider_action_triggered_callback)
@@ -299,7 +167,8 @@ class VideoPlayer(QMainWindow):
                     self.prev_button,
                     self.next_button,
                     self.save_button,
-                    self.slider
+                    self.slider,
+                    self.speed_slider
             ):
                 component.setEnabled(False)
 
@@ -323,7 +192,8 @@ class VideoPlayer(QMainWindow):
                         self.prev_button,
                         self.next_button,
                         self.save_button,
-                        self.slider
+                        self.slider,
+                        self.speed_slider
                 ):
                     component.setEnabled(True)
 
@@ -346,8 +216,7 @@ class VideoPlayer(QMainWindow):
                 self.play_button.setText('Pause')
 
                 # Start timer
-                interval = int(1000 / new_state.video_playback_information.fps)
-                self.timer.setInterval(interval)
+                self.update_timer_interval()
                 self.timer.start()
 
     def load_video(self, video_path):
@@ -455,20 +324,31 @@ class VideoPlayer(QMainWindow):
             # Convert to QImage
             height, width, channel = curr_hwc_rgb_frame.shape
             bytes_per_line = 3 * width
-            q_img = QImage(curr_hwc_rgb_frame.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
+            q_img = QImage(curr_hwc_rgb_frame.data, width, height, bytes_per_line, Format_RGB888)
 
             # Scale to fit label while maintaining aspect ratio
             pixmap = QPixmap.fromImage(q_img)
             pixmap = pixmap.scaled(
                 self.video_label.width(),
                 self.video_label.height(),
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
+                QT_KEEP_ASPECT_RATIO,
+                QT_SMOOTH_TRANSFORMATION
             )
 
             self.slider.setValue(curr_frame_idx)
             self.video_label.setPixmap(pixmap)
             self.status_label.setText('Frame: %d/%d; Time: %.3fs/%.3fs' % (curr_frame_idx, total_frames - 1, curr_frame_idx / fps, total_frames / fps))
+
+    def update_timer_interval(self):
+        if isinstance(self.state, VideoOpenedAndPlaying):
+            fps = self.state.video_playback_information.fps
+            interval = int(1000 / (fps * self.playback_speed))
+            self.timer.setInterval(max(1, interval))
+
+    def playback_speed_changed_callback(self, value):
+        self.playback_speed = PLAYBACK_SPEEDS[value]
+        self.speed_label.setText('%gx' % self.playback_speed)
+        self.update_timer_interval()
 
     def open_video_callback(self):
         file_dialog = QFileDialog()

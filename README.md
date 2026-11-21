@@ -15,6 +15,7 @@ A lightweight GUI application for precise frame-by-frame video analysis and scre
 
 - **Frame-accurate navigation**: Move through videos one frame at a time with perfect precision
 - **Instant screenshot capture**: Save any frame as PNG/JPEG with customizable paths
+- **Playback speed control**: Play at 0.5x, 1x, 2x, or 4x with a dedicated slider (1x default)
 - **Simple workflow**: Open -> Navigate -> Capture -> Repeat
 - **Visual timeline**: Quickly jump to any frame using the position slider
 - **Compatibility**: Supports Python 2+ and PyQt4/PyQt5/PyQt6/PySide/PySide2/PySide6
@@ -38,6 +39,7 @@ frameperfect
 2. Use navigation controls:
    - **Previous/Next Frame**: Move precisely through frames
    - **Slider**: Jump to any position
+   - **Playback Speed**: Choose 0.5x, 1x, 2x, or 4x
    - **Save Frame**: Capture current frame
 
 ### Option 2: Sequential Batch Mode (New!)
@@ -57,6 +59,7 @@ frameperfect video1.mp4 video2.mp4 video3.mp4
 2. Use these controls:
    - **Previous/Next Frame**: Move precisely through frames
    - **Slider**: Jump to any position in the video
+   - **Playback Speed**: Choose 0.5x, 1x, 2x, or 4x
    - **Save Frame**: Capture the current frame to your Pictures folder
 
 ## Troubleshooting
